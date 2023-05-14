@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Welcome = ({navigation}) => {
   return (
@@ -25,9 +26,7 @@ const Welcome = ({navigation}) => {
           onPress={() => {
             navigation.navigate('Login');
           }}>
-          <Text style={{color: '#26B7B7', fontSize: 18, fontWeight: 'bold'}}>
-            Ok
-          </Text>
+          <Icon name="arrow-forward" size={42} color="#26B7B7" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>

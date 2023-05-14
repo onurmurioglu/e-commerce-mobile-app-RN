@@ -7,9 +7,14 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
+import axios, {Axios} from 'axios';
+import BASE_URL from '../Config';
 
 const Login = ({navigation}) => {
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
     <SafeAreaView style={styles.mainView}>
       <View style={styles.viewForImage}>
@@ -17,10 +22,51 @@ const Login = ({navigation}) => {
       </View>
       <View style={styles.designView}>
         <View style={styles.contentView}>
-          <TextInput style={styles.textInput} placeholder="Username" />
-          <TextInput style={styles.textInput} placeholder="Password" />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Username"
+            onChangeText={user => {
+              setUserName(user);
+            }}
+          />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Password"
+            onChangeText={pwd => {
+              setPassword(pwd);
+            }}
+          />
 
-          <TouchableOpacity style={styles.signInButton}>
+          <TouchableOpacity
+            style={styles.signInButton}
+            onPress={() => {
+              console.warn(BASE_URL);
+              console.warn('User name: ', userName);
+              console.warn('Password: ', password);
+
+              axios
+                .get(
+                  `${BASE_URL}/users?username=${userName}&password=${password}`,
+
+                  {
+                    Headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  },
+                )
+                .then(response => {
+                  console.log('Result: ', response.data);
+
+                  if (response?.data?.length > 0) {
+                    navigation.navigate('Home');
+                  } else {
+                    alert('Girilen bilgilere ait kullanıcı bulunamadı.');
+                  }
+                })
+                .catch(error => {
+                  console.warn('Error: ', error);
+                });
+            }}>
             <Text style={styles.signInButtonText}>Sign in</Text>
           </TouchableOpacity>
 
@@ -28,22 +74,14 @@ const Login = ({navigation}) => {
             <Text style={{top: 70, fontSize: 16}}>
               Don 't have an account?{'  '}
             </Text>
+
             <TouchableOpacity
+              style={styles.signUpButton}
               onPress={() => {
                 navigation.navigate('SignUp');
+                console.log('ba');
               }}>
-              <Text
-                style={{
-                  color: '#2BB89F',
-                  fontWeight: 'bold',
-                  top: 69,
-                  fontSize: 18,
-                  shadowColor: 'white',
-                  shadowOpacity: 0.4,
-                  shadowRadius: 0.2,
-                }}>
-                Sign up
-              </Text>
+              <Text style={styles.signUpButtonText}>Sign up</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -93,7 +131,7 @@ const styles = StyleSheet.create({
 
   textInput: {
     width: '90%',
-    height: '14%',
+    // height: '14%',
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 20,
@@ -101,6 +139,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: 'white',
     fontSize: 16,
+    elevation: 15,
   },
 
   signInButton: {
@@ -110,6 +149,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 15,
   },
 
   signInButtonText: {
@@ -131,5 +171,27 @@ const styles = StyleSheet.create({
     height: '60%',
     alignSelf: 'center',
     bottom: 50,
+  },
+
+  signUpButton: {
+    color: '#2BB89F',
+    fontWeight: 'bold',
+    top: 61,
+    fontSize: 18,
+    shadowColor: 'white',
+    shadowOpacity: 0.4,
+    shadowRadius: 0.2,
+    elevation: 10,
+    width: 70,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+
+  signUpButtonText: {
+    color: '#2BB89F',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

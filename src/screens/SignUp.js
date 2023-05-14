@@ -6,9 +6,18 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
+import axios from 'axios';
 
 const SignUp = ({navigation}) => {
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [age, setAge] = useState('');
+  const [email, setEmail] = useState('');
+  const [passwordTwo, setPasswordTwo] = useState('');
+
   return (
     <SafeAreaView style={styles.mainView}>
       <View style={styles.titleView}>
@@ -24,14 +33,79 @@ const SignUp = ({navigation}) => {
       </View>
 
       <View style={styles.contentView}>
-        <TextInput style={styles.textInput} placeholder="Name" />
-        <TextInput style={styles.textInput} placeholder="Surname" />
-        <TextInput style={styles.textInput} placeholder="E-mail" />
-        <TextInput style={styles.textInput} placeholder="Username" />
-        <TextInput style={styles.textInput} placeholder="Password" />
-        <TextInput style={styles.textInput} placeholder="Retry password" />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Name"
+          onChangeText={Name => {
+            setName(Name);
+          }}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Surname"
+          onChangeText={Surname => {
+            setSurname(Surname);
+          }}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder="E-mail"
+          onChangeText={mail => {
+            setEmail(mail);
+          }}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Username"
+          onChangeText={Username => {
+            setUserName(Username);
+          }}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Password"
+          onChangeText={Password => {
+            setPassword(Password);
+          }}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Retry password"
+          onChangeText={passwordTwo => {
+            setPasswordTwo(passwordTwo);
+          }}
+        />
 
-        <TouchableOpacity style={styles.signInButton}>
+        <TouchableOpacity
+          style={styles.signInButton}
+          onPress={() => {
+            axios
+              .post(
+                `${BASE_URL}/users`,
+                {
+                  username: userName,
+                  password: password,
+                  name: name,
+                  surname: surname,
+                  email: email,
+                  //! password 2 yi kontrol et
+                },
+
+                {
+                  Headers: {
+                    'Content-Type': 'application/json',
+                  },
+                },
+              )
+              .then(response => {
+                console.log('Result: ', response.data);
+
+                alert('Kayıt başarıyla oluşturuldu!');
+              })
+              .catch(error => {
+                console.warn('Error: ', error);
+              });
+          }}>
           <Text style={styles.signInButtonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
