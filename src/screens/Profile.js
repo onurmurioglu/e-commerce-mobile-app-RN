@@ -1,11 +1,17 @@
-import {View, Text} from 'react-native';
+import {View, Text, SafeAreaView} from 'react-native';
 import React from 'react';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   return (
-    <View>
-      <Text>Profile</Text>
-    </View>
+    <SafeAreaView>
+      <Icon
+        name="arrow-back"
+        size={36}
+        onPress={() => navigation.goBack()}
+        style={{left: 20, top: 10}}
+      />
+    </SafeAreaView>
   );
 };
 
