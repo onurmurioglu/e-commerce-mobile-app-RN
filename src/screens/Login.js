@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import axios, {Axios} from 'axios';
@@ -61,11 +62,15 @@ const Login = ({navigation}) => {
                   if (response?.data?.length > 0) {
                     navigation.navigate('Home');
                   } else {
-                    alert('Girilen bilgilere ait kullanıcı bulunamadı.');
+                    Alert.alert(
+                      'Bilgi',
+                      'Girilen bilgilere ait kullanıcı bulunamadı.',
+                    );
                   }
                 })
                 .catch(error => {
                   console.warn('Error: ', error);
+                  Alert.alert('Hata', 'Giriş yapılamadı');
                 });
             }}>
             <Text style={styles.signInButtonText}>Sign in</Text>

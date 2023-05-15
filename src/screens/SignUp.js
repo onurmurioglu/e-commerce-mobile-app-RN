@@ -5,9 +5,11 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const SignUp = ({navigation}) => {
   const [userName, setUserName] = useState('');
@@ -20,6 +22,16 @@ const SignUp = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.mainView}>
+      <Text
+        style={{
+          alignSelf: 'center',
+          fontSize: 28,
+          fontWeight: 'bold',
+          top: 40,
+          color: '#51AC99',
+        }}>
+        Sign Up
+      </Text>
       <View style={styles.titleView}>
         <View style={styles.backButtonView}>
           <TouchableOpacity
@@ -27,7 +39,7 @@ const SignUp = ({navigation}) => {
             onPress={() => {
               navigation.navigate('Login');
             }}>
-            <Text>Back</Text>
+            <Icon name="arrow-back" size={30} />
           </TouchableOpacity>
         </View>
       </View>
@@ -68,13 +80,13 @@ const SignUp = ({navigation}) => {
             setPassword(Password);
           }}
         />
-        <TextInput
+        {/* <TextInput
           style={styles.textInput}
           placeholder="Retry password"
           onChangeText={passwordTwo => {
             setPasswordTwo(passwordTwo);
           }}
-        />
+        /> */}
 
         <TouchableOpacity
           style={styles.signInButton}
@@ -100,10 +112,11 @@ const SignUp = ({navigation}) => {
               .then(response => {
                 console.log('Result: ', response.data);
 
-                alert('Kayıt başarıyla oluşturuldu!');
+                Alert.alert('Bilgi', 'Kayıt başarıyla oluşturuldu!');
               })
               .catch(error => {
                 console.warn('Error: ', error);
+                Alert.alert('Hata', 'Kayıt olma işlemi başarısız...');
               });
           }}>
           <Text style={styles.signInButtonText}>Sign Up</Text>
@@ -125,7 +138,7 @@ const styles = StyleSheet.create({
     with: '100%',
     height: '20%',
     justifyContent: 'flex-start',
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
     //backgroundColor: 'yellow',
     flexDirection: 'row',
   },
