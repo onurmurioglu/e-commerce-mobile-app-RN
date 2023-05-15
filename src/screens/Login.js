@@ -32,6 +32,7 @@ const Login = ({navigation}) => {
           <TextInput
             style={styles.textInput}
             placeholder="Password"
+            secureTextEntry={true}
             onChangeText={pwd => {
               setPassword(pwd);
             }}
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
   signInButton: {
     backgroundColor: '#51AD99',
     width: '90%',
-    height: '14%',
+    height: 50,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',

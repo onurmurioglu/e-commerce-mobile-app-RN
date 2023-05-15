@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     height: '20%',
     justifyContent: 'flex-start',
     alignSelf: 'center',
-    backgroundColor: 'yellow',
+    //backgroundColor: 'yellow',
     flexDirection: 'row',
   },
 

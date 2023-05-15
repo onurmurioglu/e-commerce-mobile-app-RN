@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, SafeAreaView, Image, Text, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -18,7 +18,15 @@ const Details = ({navigation, route}) => {
         <Icon name="shopping-cart" size={28} />
       </View>
       <View style={style.imageContainer}>
-        <Image source={product.img} style={{resizeMode: 'contain', flex: 1}} />
+        <Image
+          source={{uri: product.image}}
+          style={{
+            resizeMode: 'contain',
+            flex: 1,
+            width: '90%',
+            height: '30%',
+          }}
+        />
       </View>
       <View style={style.detailsContainer}>
         <View
@@ -27,8 +35,7 @@ const Details = ({navigation, route}) => {
             flexDirection: 'row',
             alignItems: 'flex-end',
           }}>
-          <View style={style.line} />
-          <Text style={{fontSize: 18, fontWeight: 'bold'}}>Best choice</Text>
+          {/* <View style={style.line} /> */}
         </View>
         <View
           style={{
@@ -38,16 +45,18 @@ const Details = ({navigation, route}) => {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <Text style={{fontSize: 22, fontWeight: 'bold'}}>{product.name}</Text>
+          <Text style={{fontSize: 22, fontWeight: '600', width: '75%'}}>
+            {product.title}
+          </Text>
           <View style={style.priceTag}>
             <Text
               style={{
-                marginLeft: 15,
+                marginLeft: 10,
                 color: COLORS.white,
                 fontWeight: 'bold',
-                fontSize: 16,
+                fontSize: 18,
               }}>
-              ${product.price}
+              {product.price} ₺
             </Text>
           </View>
         </View>
@@ -60,7 +69,7 @@ const Details = ({navigation, route}) => {
               lineHeight: 22,
               marginTop: 10,
             }}>
-            {product.about}
+            {product.description}
           </Text>
           <View
             style={{
@@ -92,7 +101,7 @@ const Details = ({navigation, route}) => {
             <View style={style.buyBtn}>
               <Text
                 style={{color: COLORS.white, fontSize: 18, fontWeight: 'bold'}}>
-                Buy
+                Add to Cart
               </Text>
             </View>
           </View>

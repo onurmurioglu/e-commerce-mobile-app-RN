@@ -10,21 +10,39 @@ import {
   Dimensions,
   Image,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import COLORS from '../../src/consts/Colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import axios from 'axios';
 
 const width = Dimensions.get('screen').width / 2 - 30;
-
-const photo =
-  'https://fakestoreapi.com/img/61sbMiUnoGL._AC_UL640_QL65_ML3_.jpg';
 
 const Home = ({navigation}) => {
   const categories = ["Men's Clothing", 'Jewelery', 'Electronics'];
 
   const [categoryIndex, setCategoryIndex] = useState(0);
+  const [productList, setProductList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [bgColor, setBgColor] = useState(COLORS.green);
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`${BASE_URL}/products`)
+      .then(response => {
+        console.log('Result: ', response.data);
+
+        setProductList(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        alert('Error: ', error);
+        setLoading(false);
+      });
+  }, []);
 
   const CategoryLists = () => {
     return (
@@ -48,7 +66,7 @@ const Home = ({navigation}) => {
     );
   };
 
-  const Card = product => {
+  const Card = ({product}) => {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -56,7 +74,7 @@ const Home = ({navigation}) => {
         }}>
         <View style={styles.card}>
           <View style={{alignItems: 'flex-end'}}>
-            <View
+            {/* <View
               style={{
                 width: 30,
                 height: 30,
@@ -72,18 +90,34 @@ const Home = ({navigation}) => {
                 size={18}
                 color={product.like ? COLORS.red : COLORS.dark}
               />
-            </View>
+            </View> */}
           </View>
-          <View style={{height: 100, alignItems: 'center'}}>
+          <View
+            style={{
+              height: 120,
+              alignItems: 'center',
+            }}>
             <Image
-              style={{flex: 1, resizeMode: 'contain'}}
+              style={{
+                flex: 1,
+                resizeMode: 'contain',
+                width: 120,
+                height: 120,
+              }}
               source={{
-                uri: photo,
+                uri: product.image,
               }}
             />
           </View>
-          <Text style={{fontWeight: 'bold', fontSize: 15, marginTop: 10}}>
-            "product.name"
+          <Text
+            numberOfLines={2}
+            style={{
+              fontWeight: '600',
+              fontSize: 14,
+              marginTop: 10,
+              marginBottom: 10,
+            }}>
+            {product.title}
           </Text>
           <View
             style={{
@@ -91,8 +125,13 @@ const Home = ({navigation}) => {
               justifyContent: 'space-between',
               marginTop: 5,
             }}>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>0.00 TL</Text>
-            <View
+            <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+              {product.price} TL
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                //navigation.setParams(product);
+              }}
               style={{
                 height: 25,
                 width: 25,
@@ -110,7 +149,7 @@ const Home = ({navigation}) => {
                 }}>
                 +
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
@@ -128,36 +167,45 @@ const Home = ({navigation}) => {
             E-commerce App
           </Text>
         </View>
-
-        <Icon
-          name="shopping-cart"
-          size={36}
-          style={{right: 10}}
-          color={COLORS.dark}
-        />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Cart');
+          }}>
+          <Icon
+            name="shopping-cart"
+            size={36}
+            style={{right: 10}}
+            color={COLORS.dark}
+          />
+        </TouchableOpacity>
       </View>
-      <View style={{marginTop: 30, flexDirection: 'row'}}>
+      <View style={{marginTop: 30, flexDirection: 'row', alignSelf: 'center'}}>
         <View style={styles.searchContainer}>
           <Icon name="search" size={25} style={{marginLeft: 20}} />
           <TextInput placeholder=" Search" style={styles.searchInput} />
         </View>
-        <View style={styles.sortButton}>
-          <Icon name="sort" size={30} color={COLORS.white} />
-        </View>
+        <TouchableOpacity style={styles.searchButton}>
+          <Icon name="search" size={30} color={COLORS.white} />
+        </TouchableOpacity>
       </View>
 
       <CategoryLists />
-      <FlatList
-        columnWrapperStyle={{justifyContent: 'space-around'}}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          marginTop: 10,
-          paddingBottom: 50,
-        }}
-        numColumns={2}
-        data={'plants'}
-        renderItem={item => <Card product={item} />}
-      />
+
+      {loading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <FlatList
+          columnWrapperStyle={{justifyContent: 'space-around'}}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            marginTop: 10,
+            paddingBottom: 50,
+          }}
+          numColumns={2}
+          data={productList}
+          renderItem={({item}) => <Card product={item} />}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -184,6 +232,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    // alignSelf: 'center',
   },
 
   searchInput: {
@@ -191,9 +240,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.dark,
     flex: 1,
+    //alignSelf: 'center',
   },
 
-  sortButton: {
+  searchButton: {
     marginLeft: 10,
     height: 50,
     width: 50,
@@ -224,6 +274,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
+    flex: 1,
     height: 225,
     backgroundColor: COLORS.light,
     width,
@@ -231,5 +282,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     padding: 15,
+
+    shadowColor: 'gray',
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
   },
 });
