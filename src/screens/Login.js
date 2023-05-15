@@ -62,15 +62,12 @@ const Login = ({navigation}) => {
                   if (response?.data?.length > 0) {
                     navigation.navigate('Home');
                   } else {
-                    Alert.alert(
-                      'Bilgi',
-                      'Girilen bilgilere ait kullanıcı bulunamadı.',
-                    );
+                    Alert.alert('Info', 'User Not Found.');
                   }
                 })
                 .catch(error => {
                   console.warn('Error: ', error);
-                  Alert.alert('Hata', 'Giriş yapılamadı');
+                  Alert.alert('Error', 'Failed to login');
                 });
             }}>
             <Text style={styles.signInButtonText}>Sign in</Text>

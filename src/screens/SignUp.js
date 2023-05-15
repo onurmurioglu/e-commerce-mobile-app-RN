@@ -112,11 +112,11 @@ const SignUp = ({navigation}) => {
               .then(response => {
                 console.log('Result: ', response.data);
 
-                Alert.alert('Bilgi', 'Kayıt başarıyla oluşturuldu!');
+                Alert.alert('Info', 'User creation successful!');
               })
               .catch(error => {
                 console.warn('Error: ', error);
-                Alert.alert('Hata', 'Kayıt olma işlemi başarısız...');
+                Alert.alert('Error', 'User creation failed...');
               });
           }}>
           <Text style={styles.signInButtonText}>Sign Up</Text>
