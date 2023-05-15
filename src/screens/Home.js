@@ -17,6 +17,9 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import COLORS from '../../src/consts/Colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import OrderHistory from './OrderHistory';
+import Modal from 'react-native-modal';
 
 const width = Dimensions.get('screen').width / 2 - 30;
 
@@ -27,6 +30,7 @@ const Home = ({navigation}) => {
   const [productList, setProductList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [bgColor, setBgColor] = useState(COLORS.green);
+  const [menuModal, setMenuModal] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -131,6 +135,34 @@ const Home = ({navigation}) => {
             <TouchableOpacity
               onPress={() => {
                 //navigation.setParams(product);
+                // navigation.navigate('Cart', product);
+
+                axios
+                  .post(
+                    `${BASE_URL}/cart`,
+                    {
+                      id: product.id,
+                      title: product.title,
+                      price: product.price,
+                      description: product.description,
+                      category: product.category,
+                      image: product.image,
+                    },
+
+                    {
+                      Headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    },
+                  )
+                  .then(response => {
+                    console.log('Result: ', response.data);
+
+                    console.warn('Sepete eklendi');
+                  })
+                  .catch(error => {
+                    console.warn('Error: ', error);
+                  });
               }}
               style={{
                 height: 25,
@@ -158,15 +190,148 @@ const Home = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.mainContent}>
+      <Modal
+        style={{margin: 0}}
+        visible={menuModal}
+        animationType="slide"
+        coverScreen={false}
+        backdropColor="white"
+        backdropOpacity={0.9}>
+        <SafeAreaView style={{flex: 1, backgroundColor: COLORS.light}}>
+          <Text
+            style={{
+              alignSelf: 'center',
+              fontSize: 24,
+              top: 32,
+              fontWeight: 'bold',
+            }}>
+            MENU
+          </Text>
+          <View style={{alignItems: 'flex-end', justifyContent: 'flex-start'}}>
+            <TouchableOpacity
+              onPress={() => {
+                setMenuModal(false);
+              }}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                right: 10,
+              }}>
+              <Icon
+                name="close"
+                size={36}
+                style={{left: 10}}
+                color={COLORS.dark}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={{flexDirection: 'column', top: 20}}>
+            <TouchableOpacity
+              onPress={() => {
+                setMenuModal(false);
+                navigation.navigate('Profile');
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderTopWidth: 1,
+                borderBottomWidth: 1,
+                height: 60,
+              }}>
+              <Icon
+                name="person"
+                size={32}
+                style={{left: 10}}
+                color={COLORS.dark}
+              />
+              <Text style={{fontSize: 20, fontWeight: '500'}}>
+                {'    '}Profile
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                setMenuModal(false);
+                navigation.navigate('OrderHistory');
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderTopWidth: 1,
+                borderBottomWidth: 1,
+                height: 60,
+                top: 0,
+              }}>
+              <Icon
+                name="shopping-basket"
+                size={32}
+                style={{left: 10}}
+                color={COLORS.dark}
+              />
+              <Text style={{fontSize: 20, fontWeight: '500'}}>
+                {'    '}Order History
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              flex: 1,
+            }}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Login')}
+              style={{
+                bottom: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}>
+              <Icon
+                name="logout"
+                size={32}
+                style={{left: 10}}
+                color={COLORS.red}
+              />
+              <Text style={{color: 'red', fontSize: 22}}> {'   '}Log out</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
+
       <View style={styles.header}>
         <View>
-          <Text style={{fontSize: 25, fontWeight: 'bold', color: COLORS.dark}}>
+          <TouchableOpacity
+            onPress={() => {
+              setMenuModal(true);
+            }}>
+            <Icon
+              name="menu"
+              size={36}
+              style={{left: 10}}
+              color={COLORS.dark}
+            />
+          </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: 25,
+              fontWeight: 'bold',
+              color: COLORS.dark,
+              top: 10,
+            }}>
             Welcome to
           </Text>
-          <Text style={{fontSize: 38, fontWeight: 'bold', color: COLORS.green}}>
+          <Text
+            style={{
+              fontSize: 38,
+              fontWeight: 'bold',
+              color: COLORS.green,
+              top: 10,
+            }}>
             E-commerce App
           </Text>
         </View>
+
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('Cart');

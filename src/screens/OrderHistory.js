@@ -12,15 +12,16 @@ import COLORS from '../consts/Colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 
-const CartPage = ({navigation, route}) => {
-  const [cartItems, setCartItems] = useState([]);
+const OrderHistory = ({navigation, route}) => {
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/cart`)
+      .get(`${BASE_URL}/orders`)
       .then(response => {
         console.log('Result: ', response.data);
-        setCartItems(response.data);
+
+        setOrders(response.data);
       })
       .catch(error => {
         alert('Error: ', error);
@@ -53,7 +54,7 @@ const CartPage = ({navigation, route}) => {
         Shopping Cart
       </Text>
       <FlatList
-        data={cartItems}
+        data={orders}
         renderItem={renderCartItem}
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.flatlistContent}
@@ -61,49 +62,7 @@ const CartPage = ({navigation, route}) => {
       <TouchableOpacity
         style={styles.checkoutButton}
         onPress={() => {
-          axios
-            .post(
-              `${BASE_URL}/orders`,
-              {
-                cartItems,
-              },
-
-              {
-                Headers: {
-                  'Content-Type': 'application/json',
-                },
-              },
-            )
-            .then(response => {
-              console.log('Result: ', response.data);
-
-              axios
-                .delete(
-                  `${BASE_URL}/orders`,
-                  {
-                    cartItems,
-                  },
-
-                  {
-                    Headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  },
-                )
-                .then(response => {
-                  console.log('Result: ', response.data);
-
-                  alert('Sİpariş başarıyla oluşturuldu!');
-                })
-                .catch(error => {
-                  console.warn('Error: ', error);
-                });
-
-              alert('Sipariş başarıyla oluşturuldu!');
-            })
-            .catch(error => {
-              console.warn('Error: ', error);
-            });
+          console.log(orders);
         }}>
         <Text style={styles.checkoutButtonText}>Place an Order</Text>
       </TouchableOpacity>
@@ -152,4 +111,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CartPage;
+export default OrderHistory;
