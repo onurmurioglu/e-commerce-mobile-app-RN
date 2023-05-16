@@ -20,7 +20,7 @@ const OrderHistory = ({navigation, route}) => {
     axios
       .get(`${BASE_URL}/orders`)
       .then(response => {
-        console.warn('Result: ', response.data);
+        //console.warn('Result: ', response.data);
 
         setCartItems(response.data.map(order => order.cartItems));
       })

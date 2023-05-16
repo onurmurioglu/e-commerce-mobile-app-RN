@@ -181,7 +181,10 @@ const CartPage = ({navigation, route}) => {
               })
               .catch(error => {
                 console.warn('Error: ', error);
-                alert('An error occurred while creating the order.');
+                Alert.alert(
+                  'Error',
+                  'An error occurred while creating the order.',
+                );
               });
           } else {
             Alert.alert(

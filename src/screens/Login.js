@@ -66,7 +66,7 @@ const Login = ({navigation}) => {
                   }
                 })
                 .catch(error => {
-                  console.warn('Error: ', error);
+                  console.log('Error: ', error);
                   Alert.alert('Error', 'Failed to login');
                 });
             }}>

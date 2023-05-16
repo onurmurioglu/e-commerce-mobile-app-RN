@@ -11,6 +11,7 @@ import {
   Image,
   Platform,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -57,7 +58,7 @@ const Home = ({navigation}) => {
             activeOpacity={0.8}
             onPress={() => {
               setCategoryIndex(index);
-              console.warn(item);
+              //  console.warn(item);
 
               {
                 if (item == 'All') {
@@ -191,10 +192,11 @@ const Home = ({navigation}) => {
                   .then(response => {
                     console.log('Result: ', response.data);
 
-                    console.warn('Sepete eklendi');
+                    //   console.warn('Sepete eklendi');
                   })
                   .catch(error => {
-                    console.warn('Error: ', error);
+                    console.log('Error: ', error);
+                    Alert.alert('Error', 'Failed add in cart');
                   });
               }}
               style={{
@@ -406,7 +408,7 @@ const Home = ({navigation}) => {
         <TouchableOpacity
           style={styles.searchButton}
           onPress={() => {
-            console.warn(searchTxt);
+            //  console.warn(searchTxt);
             axios
               .get(`${BASE_URL}/products?title=${searchTxt}`)
               .then(response => {
