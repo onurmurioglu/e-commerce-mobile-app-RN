@@ -14,32 +14,46 @@ import axios from 'axios';
 
 const OrderHistory = ({navigation, route}) => {
   const [orders, setOrders] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     axios
       .get(`${BASE_URL}/orders`)
       .then(response => {
-        console.log('Result: ', response.data);
+        console.warn('Result: ', response.data);
 
-        setOrders(response.data);
+        setCartItems(response.data.map(order => order.cartItems));
       })
       .catch(error => {
         alert('Error: ', error);
       });
   }, []);
 
-  const renderCartItem = ({item}) => (
-    <View style={styles.card}>
-      <Image
-        source={{uri: item.image}}
-        style={{width: '40%', height: 80, resizeMode: 'contain'}}
+  const renderCartItem = ({item}) => {
+    return (
+      <FlatList
+        data={item}
+        renderItem={({item: cartItem}) => (
+          <View>
+            <View style={styles.card}>
+              <Image
+                source={{uri: cartItem.image}}
+                style={{width: '40%', height: 80, resizeMode: 'contain'}}
+              />
+              <View style={{flex: 1}}>
+                <Text style={styles.itemName}>{cartItem.title}</Text>
+                <Text style={styles.itemPrice}>{`${cartItem.price} ₺`}</Text>
+              </View>
+            </View>
+            {/* <View
+              style={{width: '100%', height: 2, backgroundColor: 'black'}}
+            /> */}
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
       />
-      <View style={{flex: 1}}>
-        <Text style={styles.itemName}>{item.title}</Text>
-        <Text style={styles.itemPrice}>{`${item.price} ₺`}</Text>
-      </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -51,21 +65,14 @@ const OrderHistory = ({navigation, route}) => {
           fontWeight: '600',
           marginBottom: 30,
         }}>
-        Shopping Cart
+        Order History
       </Text>
       <FlatList
-        data={orders}
+        data={cartItems}
         renderItem={renderCartItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.flatlistContent}
       />
-      <TouchableOpacity
-        style={styles.checkoutButton}
-        onPress={() => {
-          console.log(orders);
-        }}>
-        <Text style={styles.checkoutButtonText}>Place an Order</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };

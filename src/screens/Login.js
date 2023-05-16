@@ -42,9 +42,9 @@ const Login = ({navigation}) => {
           <TouchableOpacity
             style={styles.signInButton}
             onPress={() => {
-              console.warn(BASE_URL);
-              console.warn('User name: ', userName);
-              console.warn('Password: ', password);
+              // console.warn(BASE_URL);
+              // console.warn('User name: ', userName);
+              // console.warn('Password: ', password);
 
               axios
                 .get(

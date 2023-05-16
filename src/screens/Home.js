@@ -24,12 +24,12 @@ import Modal from 'react-native-modal';
 const width = Dimensions.get('screen').width / 2 - 30;
 
 const Home = ({navigation}) => {
-  const categories = ["Men's Clothing", 'Jewelery', 'Electronics'];
+  const categories = ['All', "Men's Clothing", 'Jewelery', 'Electronics'];
 
   const [categoryIndex, setCategoryIndex] = useState(0);
   const [productList, setProductList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [bgColor, setBgColor] = useState(COLORS.green);
+  const [searchTxt, setSearchTxt] = useState('');
   const [menuModal, setMenuModal] = useState(false);
 
   useEffect(() => {
@@ -55,7 +55,40 @@ const Home = ({navigation}) => {
           <TouchableWithoutFeedback
             key={index}
             activeOpacity={0.8}
-            onPress={() => setCategoryIndex(index)}>
+            onPress={() => {
+              setCategoryIndex(index);
+              console.warn(item);
+
+              {
+                if (item == 'All') {
+                  axios
+                    .get(`${BASE_URL}/products`)
+                    .then(response => {
+                      console.log('Result: ', response.data);
+
+                      setProductList(response.data);
+                      setLoading(false);
+                    })
+                    .catch(error => {
+                      alert('Error: ', error);
+                      setLoading(false);
+                    });
+                } else {
+                  axios
+                    .get(`${BASE_URL}/products?category=${item}`)
+                    .then(response => {
+                      console.log('Result: ', response.data);
+
+                      setProductList(response.data);
+                      setLoading(false);
+                    })
+                    .catch(error => {
+                      alert('Error: ', error);
+                      setLoading(false);
+                    });
+                }
+              }
+            }}>
             <Text
               key={index}
               style={[
@@ -347,9 +380,46 @@ const Home = ({navigation}) => {
       <View style={{marginTop: 30, flexDirection: 'row', alignSelf: 'center'}}>
         <View style={styles.searchContainer}>
           <Icon name="search" size={25} style={{marginLeft: 20}} />
-          <TextInput placeholder=" Search" style={styles.searchInput} />
+          <TextInput
+            placeholder=" Search"
+            style={styles.searchInput}
+            onChangeText={inputTxt => {
+              setSearchTxt(inputTxt);
+
+              if (searchTxt === '') {
+                axios
+                  .get(`${BASE_URL}/products`)
+                  .then(response => {
+                    console.log('Result: ', response.data);
+
+                    setProductList(response.data);
+                    setLoading(false);
+                  })
+                  .catch(error => {
+                    alert('Error: ', error);
+                    setLoading(false);
+                  });
+              }
+            }}
+          />
         </View>
-        <TouchableOpacity style={styles.searchButton}>
+        <TouchableOpacity
+          style={styles.searchButton}
+          onPress={() => {
+            console.warn(searchTxt);
+            axios
+              .get(`${BASE_URL}/products?title=${searchTxt}`)
+              .then(response => {
+                console.log('Result: ', response.data);
+
+                setProductList(response.data);
+                setLoading(false);
+              })
+              .catch(error => {
+                alert('Error: ', error);
+                setLoading(false);
+              });
+          }}>
           <Icon name="search" size={30} color={COLORS.white} />
         </TouchableOpacity>
       </View>

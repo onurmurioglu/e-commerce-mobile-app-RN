@@ -1,11 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, Image, Text, StyleSheet} from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  Image,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import COLORS from '../consts/Colors';
 
 const Details = ({navigation, route}) => {
   const product = route.params;
+
+  const [counter, setCounter] = useState(1);
+
+  function IncreaseCounter() {
+    setCounter(counter + 1);
+    console.warn(counter);
+  }
+
+  function DecreaseCounter() {
+    setCounter(counter - 1);
+  }
 
   return (
     <SafeAreaView
@@ -15,7 +34,12 @@ const Details = ({navigation, route}) => {
       }}>
       <View style={style.header}>
         <Icon name="arrow-back" size={28} onPress={() => navigation.goBack()} />
-        <Icon name="shopping-cart" size={28} />
+
+        <Icon
+          name="shopping-cart"
+          size={28}
+          onPress={() => navigation.navigate('Cart')}
+        />
       </View>
       <View style={style.imageContainer}>
         <Image
@@ -45,32 +69,35 @@ const Details = ({navigation, route}) => {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <Text style={{fontSize: 22, fontWeight: '600', width: '75%'}}>
+          <Text style={{fontSize: 22, fontWeight: '600', width: '73%'}}>
             {product.title}
           </Text>
           <View style={style.priceTag}>
             <Text
               style={{
-                marginLeft: 10,
+                marginLeft: 5,
                 color: COLORS.white,
                 fontWeight: 'bold',
                 fontSize: 18,
               }}>
-              {product.price} ₺
+              {product.price}₺
             </Text>
           </View>
         </View>
         <View style={{paddingHorizontal: 20, marginTop: 10}}>
           <Text style={{fontSize: 20, fontWeight: 'bold'}}>About</Text>
-          <Text
-            style={{
-              color: 'grey',
-              fontSize: 16,
-              lineHeight: 22,
-              marginTop: 10,
-            }}>
-            {product.description}
-          </Text>
+          <ScrollView>
+            <Text
+              style={{
+                color: 'grey',
+                fontSize: 16,
+                lineHeight: 22,
+                marginTop: 10,
+              }}>
+              {product.description}
+            </Text>
+          </ScrollView>
+
           <View
             style={{
               marginTop: 20,
@@ -82,20 +109,30 @@ const Details = ({navigation, route}) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <View style={style.borderBtn}>
+              <TouchableOpacity
+                style={style.borderBtn}
+                onPress={() => {
+                  if (counter > 1) {
+                    DecreaseCounter();
+                  }
+                }}>
                 <Text style={style.borderBtnText}>-</Text>
-              </View>
+              </TouchableOpacity>
               <Text
                 style={{
                   fontSize: 20,
                   marginHorizontal: 10,
                   fontWeight: 'bold',
                 }}>
-                1
+                {counter}
               </Text>
-              <View style={style.borderBtn}>
+              <TouchableOpacity
+                style={style.borderBtn}
+                onPress={() => {
+                  IncreaseCounter();
+                }}>
                 <Text style={style.borderBtnText}>+</Text>
-              </View>
+              </TouchableOpacity>
             </View>
 
             <View style={style.buyBtn}>
