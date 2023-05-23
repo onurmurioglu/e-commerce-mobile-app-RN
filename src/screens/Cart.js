@@ -177,7 +177,9 @@ const CartPage = ({navigation, route}) => {
               .then(response => {
                 console.log('Result: ', response.data);
 
-                alert('Order created successfully!');
+                Alert.alert('Info', 'Order created successfully!');
+
+                navigation.navigate('Home');
               })
               .catch(error => {
                 console.warn('Error: ', error);
